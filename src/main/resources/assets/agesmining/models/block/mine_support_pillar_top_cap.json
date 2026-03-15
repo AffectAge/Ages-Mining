@@ -7,15 +7,28 @@
   "elements": [
     {
       "comment": "Top cap under the beam line",
-      "from": [4, 12, 4],
+      "from": [3, 12, 3],
       "to": [12, 16, 12],
       "faces": {
-        "north": { "uv": [4, 12, 12, 16], "texture": "#wood" },
-        "south": { "uv": [4, 12, 12, 16], "texture": "#wood" },
-        "east":  { "uv": [4, 12, 12, 16], "texture": "#wood" },
-        "west":  { "uv": [4, 12, 12, 16], "texture": "#wood" },
-        "up":    { "uv": [4, 4, 12, 12], "texture": "#wood" },
-        "down":  { "uv": [4, 4, 12, 12], "texture": "#wood" }
+        "north": { "uv": [3, 12, 12, 16], "texture": "#wood" },
+        "south": { "uv": [3, 12, 12, 16], "texture": "#wood" },
+        "east":  { "uv": [3, 12, 12, 16], "texture": "#wood" },
+        "west":  { "uv": [3, 12, 12, 16], "texture": "#wood" },
+        "up":    { "uv": [3, 3, 12, 12], "texture": "#wood" },
+        "down":  { "uv": [3, 3, 12, 12], "texture": "#wood" }
+      }
+    },
+    {
+      "comment": "Inner saddle where beam visually sits",
+      "from": [5, 13, 5],
+      "to": [11, 16, 11],
+      "faces": {
+        "north": { "uv": [5, 13, 11, 16], "texture": "#wood" },
+        "south": { "uv": [5, 13, 11, 16], "texture": "#wood" },
+        "east":  { "uv": [5, 13, 11, 16], "texture": "#wood" },
+        "west":  { "uv": [5, 13, 11, 16], "texture": "#wood" },
+        "up":    { "uv": [5, 5, 11, 11], "texture": "#wood" },
+        "down":  { "uv": [5, 5, 11, 11], "texture": "#wood" }
       }
     }
   ]

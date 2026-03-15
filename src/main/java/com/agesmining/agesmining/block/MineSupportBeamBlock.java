@@ -5,7 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -54,13 +53,41 @@ public class MineSupportBeamBlock extends Block {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        // Align beam to player's facing horizontal axis
-        Direction facing = ctx.getHorizontalDirection();
-        Direction.Axis axis = facing.getAxis();
-        // Default to X if not horizontal (shouldn't happen)
-        if (axis == Direction.Axis.Y) axis = Direction.Axis.X;
+        Direction.Axis axis = choosePlacementAxis(ctx);
         BlockState base = this.defaultBlockState().setValue(AXIS, axis);
         return updateConnections(base, ctx.getLevel(), ctx.getClickedPos());
+    }
+
+    private Direction.Axis choosePlacementAxis(BlockPlaceContext ctx) {
+        BlockPos pos = ctx.getClickedPos();
+        var level = ctx.getLevel();
+
+        int scoreX = scoreAxisConnections(level, pos, Direction.Axis.X);
+        int scoreZ = scoreAxisConnections(level, pos, Direction.Axis.Z);
+
+        if (scoreX > scoreZ) {
+            return Direction.Axis.X;
+        }
+        if (scoreZ > scoreX) {
+            return Direction.Axis.Z;
+        }
+
+        Direction clickedFace = ctx.getClickedFace();
+        if (clickedFace.getAxis().isHorizontal()) {
+            return clickedFace.getAxis();
+        }
+
+        Direction.Axis axisFromPlayer = ctx.getHorizontalDirection().getAxis();
+        return axisFromPlayer == Direction.Axis.Y ? Direction.Axis.X : axisFromPlayer;
+    }
+
+    private int scoreAxisConnections(net.minecraft.world.level.LevelAccessor level, BlockPos pos, Direction.Axis axis) {
+        Direction negative = axis == Direction.Axis.X ? Direction.WEST : Direction.NORTH;
+        Direction positive = axis == Direction.Axis.X ? Direction.EAST : Direction.SOUTH;
+        int score = 0;
+        if (connectsTo(level.getBlockState(pos.relative(negative)), axis)) score++;
+        if (connectsTo(level.getBlockState(pos.relative(positive)), axis)) score++;
+        return score;
     }
 
     @Override

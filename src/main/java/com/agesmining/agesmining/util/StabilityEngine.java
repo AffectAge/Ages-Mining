@@ -11,8 +11,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +24,7 @@ import java.util.WeakHashMap;
  * Collapse simulation modelled after TFC:
  * - mining/chiseling attempts a local unsupported scan
  * - one position starts a collapse wave
- * - wave propagates upwards in random ticks and shrinks each step
+ * - wave propagates upwards and to nearby positions
  */
 public class StabilityEngine {
 
@@ -37,29 +39,54 @@ public class StabilityEngine {
     }
 
     private final List<CollapseWave> collapsesInProgress = new ArrayList<>();
+    private final ArrayDeque<PendingCollapseStart> pendingCollapseStarts = new ArrayDeque<>();
 
     public void tick(ServerLevel level) {
-        if (collapsesInProgress.isEmpty() || level.getRandom().nextInt(10) != 0) {
+        processPendingStarts(level);
+        if (collapsesInProgress.isEmpty()) {
             return;
         }
 
-        for (CollapseWave wave : collapsesInProgress) {
-            Set<BlockPos> updatedPositions = new HashSet<>();
+        int propagationRadius = Math.max(0, AgesMiningConfig.INSTANCE.COLLAPSE_PROPAGATION_RADIUS.get());
+        int maxBlocksPerCollapse = Math.max(1, AgesMiningConfig.INSTANCE.MAX_BLOCKS_PER_COLLAPSE.get());
 
+        for (CollapseWave wave : collapsesInProgress) {
+            if (wave.collapsedBlocks >= maxBlocksPerCollapse) {
+                wave.nextPositions.clear();
+                continue;
+            }
+
+            Set<BlockPos> updatedPositions = new HashSet<>();
             for (BlockPos posAt : wave.nextPositions) {
+                if (wave.collapsedBlocks >= maxBlocksPerCollapse) {
+                    break;
+                }
+
                 BlockState stateAt = level.getBlockState(posAt);
-                if (stateAt.is(ModTags.Blocks.CAN_COLLAPSE)
-                    && canFallDown(level, posAt)
-                    && posAt.distSqr(wave.centerPos) < wave.radiusSquared
-                    && level.getRandom().nextDouble() < AgesMiningConfig.INSTANCE.COLLAPSE_PROPAGATE_CHANCE.get()) {
-                    if (collapseBlock(level, posAt, stateAt, false)) {
-                        updatedPositions.add(posAt.above().immutable());
-                    }
+                if (!stateAt.is(ModTags.Blocks.CAN_COLLAPSE)) {
+                    continue;
+                }
+                if (isSupported(level, posAt)) {
+                    continue;
+                }
+                if (!canFallDown(level, posAt)) {
+                    continue;
+                }
+                if (posAt.distSqr(wave.centerPos) >= wave.radiusSquared) {
+                    continue;
+                }
+                if (level.getRandom().nextDouble() >= AgesMiningConfig.INSTANCE.COLLAPSE_PROPAGATE_CHANCE.get()) {
+                    continue;
+                }
+
+                if (collapseBlock(level, posAt, stateAt, false)) {
+                    wave.collapsedBlocks++;
+                    addPropagationTargets(updatedPositions, posAt, propagationRadius);
                 }
             }
 
             wave.nextPositions.clear();
-            if (!updatedPositions.isEmpty()) {
+            if (!updatedPositions.isEmpty() && wave.collapsedBlocks < maxBlocksPerCollapse) {
                 triggerCollapseEffects(level, wave.centerPos, 2.4f);
                 wave.nextPositions.addAll(updatedPositions);
                 wave.radiusSquared *= 0.8D;
@@ -75,20 +102,20 @@ public class StabilityEngine {
 
         BlockState state = level.getBlockState(pos);
         if (!state.is(ModTags.Blocks.CAN_TRIGGER_COLLAPSE)) return false;
+        if (isSupported(level, pos)) return false;
 
         boolean realCollapse = level.getRandom().nextDouble() < AgesMiningConfig.INSTANCE.COLLAPSE_TRIGGER_CHANCE.get();
         boolean fakeCollapse = !realCollapse && level.getRandom().nextDouble() < AgesMiningConfig.INSTANCE.COLLAPSE_FAKE_TRIGGER_CHANCE.get();
         if (!realCollapse && !fakeCollapse) return false;
 
-        int radX = (level.getRandom().nextInt(5) + 4) / 2;
-        int radY = (level.getRandom().nextInt(3) + 2) / 2;
-        int radZ = (level.getRandom().nextInt(5) + 4) / 2;
+        int checkRadius = Math.max(1, AgesMiningConfig.INSTANCE.CHECK_RADIUS.get());
+        double baseCollapseChance = AgesMiningConfig.INSTANCE.BASE_COLLAPSE_CHANCE.get();
 
         List<BlockPos> fakeCollapseStarts = new ArrayList<>();
         Set<BlockPos> unsupported = SupportDataManager.INSTANCE.findUnsupportedPositions(
             level,
-            pos.offset(-radX, -radY, -radZ),
-            pos.offset(radX, radY, radZ)
+            pos.offset(-checkRadius, -checkRadius, -checkRadius),
+            pos.offset(checkRadius, checkRadius, checkRadius)
         );
 
         for (BlockPos checking : unsupported) {
@@ -100,8 +127,13 @@ public class StabilityEngine {
                 continue;
             }
 
-            startCollapse(level, checking);
-            return true;
+            if (level.getRandom().nextDouble() >= baseCollapseChance) {
+                continue;
+            }
+
+            if (startCollapse(level, checking)) {
+                return true;
+            }
         }
 
         if (!fakeCollapseStarts.isEmpty()) {
@@ -115,42 +147,18 @@ public class StabilityEngine {
     }
 
     public boolean startCollapse(ServerLevel level, BlockPos centerPos) {
-        int variance = Math.max(1, AgesMiningConfig.INSTANCE.COLLAPSE_RADIUS_VARIANCE.get());
-        int radius = AgesMiningConfig.INSTANCE.COLLAPSE_MIN_RADIUS.get() + level.getRandom().nextInt(variance);
-        int radiusSquared = radius * radius;
-        Set<BlockPos> secondaryPositions = new HashSet<>();
-
-        AgesMining.LOGGER.debug("Collapse started at {}", centerPos);
-
-        for (BlockPos pos : BlockPos.betweenClosed(
-            centerPos.offset(-radius, -4, -radius),
-            centerPos.offset(radius, -4, radius)
-        )) {
-            boolean foundEmpty = false;
-            for (int y = 0; y <= 8; y++) {
-                BlockPos posAt = pos.above(y);
-                BlockState stateAt = level.getBlockState(posAt);
-
-                if (foundEmpty && stateAt.is(ModTags.Blocks.CAN_COLLAPSE)) {
-                    if (posAt.distSqr(centerPos) < radiusSquared
-                        && level.getRandom().nextDouble() < AgesMiningConfig.INSTANCE.COLLAPSE_PROPAGATE_CHANCE.get()) {
-                        if (collapseBlock(level, posAt, stateAt, true)) {
-                            secondaryPositions.add(posAt.above().immutable());
-                            break;
-                        }
-                    }
-                }
-
-                foundEmpty = !stateAt.isCollisionShapeFullBlock(level, posAt);
-            }
+        int delayTicks = Math.max(0, AgesMiningConfig.INSTANCE.COLLAPSE_DELAY_TICKS.get());
+        if (delayTicks == 0) {
+            return startCollapseNow(level, centerPos);
         }
 
-        if (!secondaryPositions.isEmpty()) {
-            collapsesInProgress.add(new CollapseWave(centerPos.immutable(), secondaryPositions, radiusSquared));
-            triggerCollapseEffects(level, centerPos, 3.5f);
-            return true;
+        long dueTime = level.getGameTime() + delayTicks;
+        pendingCollapseStarts.addLast(new PendingCollapseStart(centerPos.immutable(), dueTime));
+
+        if (AgesMiningConfig.INSTANCE.ENABLE_WARNING_PARTICLES.get()) {
+            EffectsHelper.spawnDustWarning(level, centerPos);
         }
-        return false;
+        return true;
     }
 
     public boolean isSupported(ServerLevel level, BlockPos pos) {
@@ -166,7 +174,100 @@ public class StabilityEngine {
     }
 
     public int getPendingCheckCount() {
-        return 0;
+        return pendingCollapseStarts.size();
+    }
+
+    private void processPendingStarts(ServerLevel level) {
+        if (pendingCollapseStarts.isEmpty()) {
+            return;
+        }
+
+        long now = level.getGameTime();
+        Iterator<PendingCollapseStart> iterator = pendingCollapseStarts.iterator();
+        while (iterator.hasNext()) {
+            PendingCollapseStart pending = iterator.next();
+            if (pending.dueTime > now) {
+                continue;
+            }
+            iterator.remove();
+            startCollapseNow(level, pending.centerPos);
+        }
+    }
+
+    private boolean startCollapseNow(ServerLevel level, BlockPos centerPos) {
+        int variance = Math.max(1, AgesMiningConfig.INSTANCE.COLLAPSE_RADIUS_VARIANCE.get());
+        int radius = AgesMiningConfig.INSTANCE.COLLAPSE_MIN_RADIUS.get() + level.getRandom().nextInt(variance);
+        int radiusSquared = radius * radius;
+        int maxBlocksPerCollapse = Math.max(1, AgesMiningConfig.INSTANCE.MAX_BLOCKS_PER_COLLAPSE.get());
+        int propagationRadius = Math.max(0, AgesMiningConfig.INSTANCE.COLLAPSE_PROPAGATION_RADIUS.get());
+
+        Set<BlockPos> secondaryPositions = new HashSet<>();
+        int collapsedBlocks = 0;
+
+        AgesMining.LOGGER.debug("Collapse started at {}", centerPos);
+
+        for (BlockPos pos : BlockPos.betweenClosed(
+            centerPos.offset(-radius, -4, -radius),
+            centerPos.offset(radius, -4, radius)
+        )) {
+            if (collapsedBlocks >= maxBlocksPerCollapse) {
+                break;
+            }
+
+            boolean foundEmpty = false;
+            for (int y = 0; y <= 8; y++) {
+                if (collapsedBlocks >= maxBlocksPerCollapse) {
+                    break;
+                }
+
+                BlockPos posAt = pos.above(y);
+                BlockState stateAt = level.getBlockState(posAt);
+
+                if (foundEmpty && stateAt.is(ModTags.Blocks.CAN_COLLAPSE)) {
+                    if (isSupported(level, posAt)) {
+                        continue;
+                    }
+                    if (posAt.distSqr(centerPos) < radiusSquared
+                        && level.getRandom().nextDouble() < AgesMiningConfig.INSTANCE.COLLAPSE_PROPAGATE_CHANCE.get()) {
+                        if (collapseBlock(level, posAt, stateAt, true)) {
+                            collapsedBlocks++;
+                            addPropagationTargets(secondaryPositions, posAt, propagationRadius);
+                            break;
+                        }
+                    }
+                }
+
+                foundEmpty = !stateAt.isCollisionShapeFullBlock(level, posAt);
+            }
+        }
+
+        if (!secondaryPositions.isEmpty() && collapsedBlocks > 0) {
+            collapsesInProgress.add(new CollapseWave(centerPos.immutable(), secondaryPositions, radiusSquared, collapsedBlocks));
+            triggerCollapseEffects(level, centerPos, 3.5f);
+            return true;
+        }
+        return false;
+    }
+
+    private void addPropagationTargets(Set<BlockPos> out, BlockPos collapsedPos, int radius) {
+        BlockPos above = collapsedPos.above();
+        out.add(above.immutable());
+        if (radius <= 0) {
+            return;
+        }
+
+        int r2 = radius * radius;
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dz = -radius; dz <= radius; dz++) {
+                if (dx == 0 && dz == 0) {
+                    continue;
+                }
+                if ((dx * dx + dz * dz) > r2) {
+                    continue;
+                }
+                out.add(above.offset(dx, 0, dz).immutable());
+            }
+        }
     }
 
     private boolean canStartCollapse(LevelAccessor level, BlockPos pos) {
@@ -225,15 +326,19 @@ public class StabilityEngine {
         }
     }
 
+    private record PendingCollapseStart(BlockPos centerPos, long dueTime) {}
+
     private static final class CollapseWave {
         private final BlockPos centerPos;
         private final Set<BlockPos> nextPositions;
         private double radiusSquared;
+        private int collapsedBlocks;
 
-        private CollapseWave(BlockPos centerPos, Set<BlockPos> nextPositions, double radiusSquared) {
+        private CollapseWave(BlockPos centerPos, Set<BlockPos> nextPositions, double radiusSquared, int collapsedBlocks) {
             this.centerPos = centerPos;
             this.nextPositions = nextPositions;
             this.radiusSquared = radiusSquared;
+            this.collapsedBlocks = collapsedBlocks;
         }
     }
 }

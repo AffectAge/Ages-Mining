@@ -26,3 +26,10 @@ Use mine supports to prevent cave-ins!
     versionRange="[1.20.1,1.21)"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.agesmining]]
+    modId="jade"
+    mandatory=false
+    versionRange="[11,)"
+    ordering="AFTER"
+    side="CLIENT"

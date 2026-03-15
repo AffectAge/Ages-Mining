@@ -11,6 +11,17 @@
     "tooltip.agesmining.mine_support_pillar": "Supports ceilings up to %s blocks above",
     "tooltip.agesmining.mine_support_beam": "Extends support horizontally up to %s blocks",
 
+    "jade.agesmining.supported": "Supported",
+    "jade.agesmining.anchor": "Anchor",
+    "jade.agesmining.risk": "Risk",
+    "jade.agesmining.value.yes": "Yes",
+    "jade.agesmining.value.no": "No",
+    "jade.agesmining.value.na": "N/A",
+    "jade.agesmining.risk.safe": "Safe",
+    "jade.agesmining.risk.forecast": "Forecast",
+    "jade.agesmining.risk.unstable": "Unstable",
+    "config.jade.plugin_agesmining.support_info": "Ages Mining Support Info",
+
     "subtitles.agesmining.cave_in": "Rockfall",
     "subtitles.agesmining.cave_warning": "Cracking stone"
 }

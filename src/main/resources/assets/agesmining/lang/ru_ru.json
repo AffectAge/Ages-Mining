@@ -11,6 +11,17 @@
     "tooltip.agesmining.mine_support_pillar": "Поддерживает потолок на %s блоков выше",
     "tooltip.agesmining.mine_support_beam": "Расширяет поддержку горизонтально до %s блоков",
 
+    "jade.agesmining.supported": "Поддержка",
+    "jade.agesmining.anchor": "Анкер",
+    "jade.agesmining.risk": "Риск",
+    "jade.agesmining.value.yes": "Да",
+    "jade.agesmining.value.no": "Нет",
+    "jade.agesmining.value.na": "Н/Д",
+    "jade.agesmining.risk.safe": "Безопасно",
+    "jade.agesmining.risk.forecast": "Прогноз",
+    "jade.agesmining.risk.unstable": "Нестабильно",
+    "config.jade.plugin_agesmining.support_info": "Инфо опор Ages Mining",
+
     "subtitles.agesmining.cave_in": "Камнепад",
     "subtitles.agesmining.cave_warning": "Треск камня"
 }

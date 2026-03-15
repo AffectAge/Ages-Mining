@@ -24,12 +24,6 @@ public class AgesMiningConfig {
     public final ForgeConfigSpec.IntValue MAX_BLOCKS_PER_COLLAPSE;
     public final ForgeConfigSpec.IntValue COLLAPSE_DELAY_TICKS;
 
-    // Performance settings
-    public final ForgeConfigSpec.IntValue STABILITY_CHECK_INTERVAL;
-    public final ForgeConfigSpec.BooleanValue USE_ASYNC_CHECKS;
-    public final ForgeConfigSpec.IntValue MAX_CHECKS_PER_TICK;
-    public final ForgeConfigSpec.IntValue CHUNK_CACHE_SIZE;
-
     // Particle & sound settings
     public final ForgeConfigSpec.BooleanValue ENABLE_WARNING_PARTICLES;
     public final ForgeConfigSpec.BooleanValue ENABLE_SOUNDS;
@@ -118,26 +112,6 @@ public class AgesMiningConfig {
         COLLAPSE_DELAY_TICKS = builder
             .comment("Ticks between a block being flagged as unstable and actually collapsing (20 ticks = 1 sec)")
             .defineInRange("collapseDelayTicks", 40, 5, 200);
-
-        builder.pop();
-
-        builder.comment("Performance Settings").push("performance");
-
-        STABILITY_CHECK_INTERVAL = builder
-            .comment("How many ticks between periodic stability rechecks (0 = disabled, 100 = every 5 sec)")
-            .defineInRange("stabilityCheckInterval", 100, 0, 1200);
-
-        USE_ASYNC_CHECKS = builder
-            .comment("Run stability checks asynchronously to reduce tick lag (recommended for servers)")
-            .define("useAsyncChecks", true);
-
-        MAX_CHECKS_PER_TICK = builder
-            .comment("Max number of stability check operations per game tick to avoid lag spikes")
-            .defineInRange("maxChecksPerTick", 8, 1, 64);
-
-        CHUNK_CACHE_SIZE = builder
-            .comment("Number of chunk stability results to cache (higher = less recalculation, more RAM)")
-            .defineInRange("chunkCacheSize", 256, 64, 2048);
 
         builder.pop();
 

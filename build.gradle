@@ -42,10 +42,13 @@ minecraft {
 
 repositories {
     mavenCentral()
+    maven { url = 'https://api.modrinth.com/maven' }
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.20.1-47.2.0'
+    compileOnly fg.deobf("maven.modrinth:jade:${jade_version}")
+    runtimeOnly fg.deobf("maven.modrinth:jade:${jade_version}")
 }
 
 jar {

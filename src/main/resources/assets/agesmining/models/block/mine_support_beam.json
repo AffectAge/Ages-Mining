@@ -6,7 +6,7 @@
     },
     "elements": [
         {
-            "comment": "Main horizontal beam along X axis (clean core, connectors are separate)",
+            "comment": "Main horizontal beam along X axis",
             "from": [0, 12, 6],
             "to":   [16, 16, 10],
             "faces": {
@@ -16,19 +16,6 @@
                 "down":  { "uv": [0, 6, 16, 10],  "texture": "#wood" },
                 "east":  { "uv": [6, 12, 10, 16], "texture": "#wood" },
                 "west":  { "uv": [6, 12, 10, 16], "texture": "#wood" }
-            }
-        },
-        {
-            "comment": "Upper rib to add mass and avoid flat plank look",
-            "from": [2, 14, 7],
-            "to":   [14, 16, 9],
-            "faces": {
-                "north": { "uv": [2, 14, 14, 16], "texture": "#wood" },
-                "south": { "uv": [2, 14, 14, 16], "texture": "#wood" },
-                "east":  { "uv": [7, 14, 9, 16],  "texture": "#wood" },
-                "west":  { "uv": [7, 14, 9, 16],  "texture": "#wood" },
-                "up":    { "uv": [2, 7, 14, 9],   "texture": "#wood" },
-                "down":  { "uv": [2, 7, 14, 9],   "texture": "#wood" }
             }
         }
     ]
