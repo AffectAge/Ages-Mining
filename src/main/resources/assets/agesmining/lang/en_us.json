@@ -1,0 +1,13 @@
+{
+    "block.agesmining.mine_support_pillar": "Mine Support Pillar",
+    "block.agesmining.mine_support_beam": "Mine Support Beam",
+
+    "itemGroup.agesmining.main": "Ages Mining",
+
+    "message.agesmining.unstable_ceiling": "⚠ Ceiling is unstable! Place support pillars!",
+    "message.agesmining.collapse_warning": "The ground rumbles above you...",
+    "message.agesmining.collapse_imminent": "§c§lCave-in imminent!",
+
+    "tooltip.agesmining.mine_support_pillar": "Supports ceilings up to %s blocks above",
+    "tooltip.agesmining.mine_support_beam": "Extends support horizontally up to %s blocks"
+}

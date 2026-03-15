@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "building",
+    "key": {
+        "L": {
+            "tag": "minecraft:logs"
+        },
+        "P": {
+            "item": "minecraft:stick"
+        }
+    },
+    "pattern": [
+        "LLL",
+        "P P"
+    ],
+    "result": {
+        "count": 4,
+        "item": "agesmining:mine_support_beam"
+    }
+}

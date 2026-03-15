@@ -1,0 +1,7 @@
+{
+    "replace": false,
+    "values": [
+        "agesmining:mine_support_pillar",
+        "agesmining:mine_support_beam"
+    ]
+}

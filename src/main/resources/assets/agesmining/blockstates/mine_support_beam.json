@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "axis=x": { "model": "agesmining:block/mine_support_beam" },
+        "axis=z": { "model": "agesmining:block/mine_support_beam", "y": 90 }
+    }
+}

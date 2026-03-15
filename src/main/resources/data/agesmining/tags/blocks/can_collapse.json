@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "#agesmining:can_trigger_collapse",
+    "minecraft:deepslate",
+    "minecraft:cobbled_deepslate",
+    "minecraft:tuff"
+  ]
+}

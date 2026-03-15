@@ -1,0 +1,46 @@
+{
+    "credit": "Ages Mining - Mine Support Pillar",
+    "textures": {
+        "wood": "agesmining:block/support_wood",
+        "particle": "agesmining:block/support_wood"
+    },
+    "elements": [
+        {
+            "comment": "Main vertical column (6x16x6 centered)",
+            "from": [5, 0, 5],
+            "to":   [11, 16, 11],
+            "faces": {
+                "north": { "uv": [5, 0, 11, 16], "texture": "#wood" },
+                "south": { "uv": [5, 0, 11, 16], "texture": "#wood" },
+                "east":  { "uv": [5, 0, 11, 16], "texture": "#wood" },
+                "west":  { "uv": [5, 0, 11, 16], "texture": "#wood" },
+                "up":    { "uv": [5, 5, 11, 11],  "texture": "#wood" },
+                "down":  { "uv": [5, 5, 11, 11],  "texture": "#wood" }
+            }
+        },
+        {
+            "comment": "Top cap brace (flared top)",
+            "from": [4, 13, 4],
+            "to":   [12, 16, 12],
+            "faces": {
+                "north": { "uv": [4, 13, 12, 16], "texture": "#wood" },
+                "south": { "uv": [4, 13, 12, 16], "texture": "#wood" },
+                "east":  { "uv": [4, 13, 12, 16], "texture": "#wood" },
+                "west":  { "uv": [4, 13, 12, 16], "texture": "#wood" },
+                "up":    { "uv": [4, 4, 12, 12],  "texture": "#wood" }
+            }
+        },
+        {
+            "comment": "Bottom foot brace (flared base)",
+            "from": [4, 0, 4],
+            "to":   [12, 3, 12],
+            "faces": {
+                "north": { "uv": [4, 0, 12, 3], "texture": "#wood" },
+                "south": { "uv": [4, 0, 12, 3], "texture": "#wood" },
+                "east":  { "uv": [4, 0, 12, 3], "texture": "#wood" },
+                "west":  { "uv": [4, 0, 12, 3], "texture": "#wood" },
+                "down":  { "uv": [4, 4, 12, 12], "texture": "#wood" }
+            }
+        }
+    ]
+}

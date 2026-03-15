@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "axis=y,connected_down=false,connected_up=false": { "model": "agesmining:block/mine_support_pillar" },
+        "axis=y,connected_down=true,connected_up=false":  { "model": "agesmining:block/mine_support_pillar" },
+        "axis=y,connected_down=false,connected_up=true":  { "model": "agesmining:block/mine_support_pillar" },
+        "axis=y,connected_down=true,connected_up=true":   { "model": "agesmining:block/mine_support_pillar" },
+        "axis=x,connected_down=false,connected_up=false": { "model": "agesmining:block/mine_support_pillar", "x": 90, "z": 90 },
+        "axis=x,connected_down=true,connected_up=false":  { "model": "agesmining:block/mine_support_pillar", "x": 90, "z": 90 },
+        "axis=x,connected_down=false,connected_up=true":  { "model": "agesmining:block/mine_support_pillar", "x": 90, "z": 90 },
+        "axis=x,connected_down=true,connected_up=true":   { "model": "agesmining:block/mine_support_pillar", "x": 90, "z": 90 },
+        "axis=z,connected_down=false,connected_up=false": { "model": "agesmining:block/mine_support_pillar", "x": 90 },
+        "axis=z,connected_down=true,connected_up=false":  { "model": "agesmining:block/mine_support_pillar", "x": 90 },
+        "axis=z,connected_down=false,connected_up=true":  { "model": "agesmining:block/mine_support_pillar", "x": 90 },
+        "axis=z,connected_down=true,connected_up=true":   { "model": "agesmining:block/mine_support_pillar", "x": 90 }
+    }
+}
