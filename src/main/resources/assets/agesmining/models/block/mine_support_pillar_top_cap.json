@@ -1,0 +1,22 @@
+{
+  "credit": "Ages Mining - Pillar Top Cap (active when beam is attached)",
+  "textures": {
+    "wood": "agesmining:block/support_wood",
+    "particle": "agesmining:block/support_wood"
+  },
+  "elements": [
+    {
+      "comment": "Top cap under the beam line",
+      "from": [4, 12, 4],
+      "to": [12, 16, 12],
+      "faces": {
+        "north": { "uv": [4, 12, 12, 16], "texture": "#wood" },
+        "south": { "uv": [4, 12, 12, 16], "texture": "#wood" },
+        "east":  { "uv": [4, 12, 12, 16], "texture": "#wood" },
+        "west":  { "uv": [4, 12, 12, 16], "texture": "#wood" },
+        "up":    { "uv": [4, 4, 12, 12], "texture": "#wood" },
+        "down":  { "uv": [4, 4, 12, 12], "texture": "#wood" }
+      }
+    }
+  ]
+}

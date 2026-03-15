@@ -1,6 +1,12 @@
 {
-    "variants": {
-        "axis=x": { "model": "agesmining:block/mine_support_beam" },
-        "axis=z": { "model": "agesmining:block/mine_support_beam", "y": 90 }
-    }
+  "multipart": [
+    { "when": { "axis": "x" }, "apply": { "model": "agesmining:block/mine_support_beam" } },
+    { "when": { "axis": "z" }, "apply": { "model": "agesmining:block/mine_support_beam", "y": 90 } },
+
+    { "when": { "axis": "x", "connected_negative": "true" }, "apply": { "model": "agesmining:block/mine_support_beam_connector" } },
+    { "when": { "axis": "x", "connected_positive": "true" }, "apply": { "model": "agesmining:block/mine_support_beam_connector", "y": 180 } },
+
+    { "when": { "axis": "z", "connected_negative": "true" }, "apply": { "model": "agesmining:block/mine_support_beam_connector", "y": 90 } },
+    { "when": { "axis": "z", "connected_positive": "true" }, "apply": { "model": "agesmining:block/mine_support_beam_connector", "y": 270 } }
+  ]
 }

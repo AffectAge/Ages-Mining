@@ -6,7 +6,7 @@
     },
     "elements": [
         {
-            "comment": "Main horizontal beam along X axis (16x4x4, positioned at ceiling)",
+            "comment": "Main horizontal beam along X axis (clean core, connectors are separate)",
             "from": [0, 12, 6],
             "to":   [16, 16, 10],
             "faces": {
@@ -19,27 +19,16 @@
             }
         },
         {
-            "comment": "Left hanging brace",
-            "from": [1, 8, 6],
-            "to":   [3, 12, 10],
+            "comment": "Upper rib to add mass and avoid flat plank look",
+            "from": [2, 14, 7],
+            "to":   [14, 16, 9],
             "faces": {
-                "north": { "uv": [1, 8, 3, 12], "texture": "#wood" },
-                "south": { "uv": [1, 8, 3, 12], "texture": "#wood" },
-                "east":  { "uv": [6, 8, 10, 12], "texture": "#wood" },
-                "west":  { "uv": [6, 8, 10, 12], "texture": "#wood" },
-                "down":  { "uv": [1, 6, 3, 10],  "texture": "#wood" }
-            }
-        },
-        {
-            "comment": "Right hanging brace",
-            "from": [13, 8, 6],
-            "to":   [15, 12, 10],
-            "faces": {
-                "north": { "uv": [13, 8, 15, 12], "texture": "#wood" },
-                "south": { "uv": [13, 8, 15, 12], "texture": "#wood" },
-                "east":  { "uv": [6, 8, 10, 12],  "texture": "#wood" },
-                "west":  { "uv": [6, 8, 10, 12],  "texture": "#wood" },
-                "down":  { "uv": [13, 6, 15, 10],  "texture": "#wood" }
+                "north": { "uv": [2, 14, 14, 16], "texture": "#wood" },
+                "south": { "uv": [2, 14, 14, 16], "texture": "#wood" },
+                "east":  { "uv": [7, 14, 9, 16],  "texture": "#wood" },
+                "west":  { "uv": [7, 14, 9, 16],  "texture": "#wood" },
+                "up":    { "uv": [2, 7, 14, 9],   "texture": "#wood" },
+                "down":  { "uv": [2, 7, 14, 9],   "texture": "#wood" }
             }
         }
     ]

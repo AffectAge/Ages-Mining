@@ -9,5 +9,8 @@
     "message.agesmining.collapse_imminent": "§c§lОбвал неизбежен!",
 
     "tooltip.agesmining.mine_support_pillar": "Поддерживает потолок на %s блоков выше",
-    "tooltip.agesmining.mine_support_beam": "Расширяет поддержку горизонтально до %s блоков"
+    "tooltip.agesmining.mine_support_beam": "Расширяет поддержку горизонтально до %s блоков",
+
+    "subtitles.agesmining.cave_in": "Камнепад",
+    "subtitles.agesmining.cave_warning": "Треск камня"
 }

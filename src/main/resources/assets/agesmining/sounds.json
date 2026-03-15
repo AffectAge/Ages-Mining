@@ -1,0 +1,32 @@
+{
+  "cave_in": {
+    "subtitle": "subtitles.agesmining.cave_in",
+    "sounds": [
+      {
+        "name": "agesmining:collapse/fall_1",
+        "volume": 1.0,
+        "pitch": 1.0
+      },
+      {
+        "name": "agesmining:collapse/fall_2",
+        "volume": 1.0,
+        "pitch": 0.95
+      }
+    ]
+  },
+  "cave_warning": {
+    "subtitle": "subtitles.agesmining.cave_warning",
+    "sounds": [
+      {
+        "name": "agesmining:warning/crack_1",
+        "volume": 0.9,
+        "pitch": 1.0
+      },
+      {
+        "name": "agesmining:warning/crack_2",
+        "volume": 0.9,
+        "pitch": 1.05
+      }
+    ]
+  }
+}

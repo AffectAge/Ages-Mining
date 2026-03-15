@@ -8,6 +8,7 @@ import com.agesmining.agesmining.registry.ModBlockEntities;
 import com.agesmining.agesmining.registry.ModBlocks;
 import com.agesmining.agesmining.registry.ModCreativeTabs;
 import com.agesmining.agesmining.registry.ModItems;
+import com.agesmining.agesmining.registry.ModSounds;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -31,6 +32,7 @@ public class AgesMining {
         ModItems.ITEMS.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
+        ModSounds.SOUNDS.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 

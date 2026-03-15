@@ -9,5 +9,8 @@
     "message.agesmining.collapse_imminent": "§c§lCave-in imminent!",
 
     "tooltip.agesmining.mine_support_pillar": "Supports ceilings up to %s blocks above",
-    "tooltip.agesmining.mine_support_beam": "Extends support horizontally up to %s blocks"
+    "tooltip.agesmining.mine_support_beam": "Extends support horizontally up to %s blocks",
+
+    "subtitles.agesmining.cave_in": "Rockfall",
+    "subtitles.agesmining.cave_warning": "Cracking stone"
 }

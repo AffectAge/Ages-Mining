@@ -1,10 +1,10 @@
 package com.agesmining.agesmining.util;
 
+import com.agesmining.agesmining.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.Blocks;
 
@@ -36,26 +36,19 @@ public class EffectsHelper {
             level.sendParticles(particle, cx + ox, cy, cz + oz,
                 1, 0.05, -0.1, 0.05, 0.02);
         }
+
+        playCreakWarning(level, pos);
     }
 
     /**
      * Plays a cave rumble/crack sound at the collapse origin.
      */
     public static void playCaveInSound(ServerLevel level, BlockPos pos) {
-        // Play gravel break sound as primary collapse sound
         level.playSound(null, pos,
-            SoundEvents.GRAVEL_BREAK,
+            ModSounds.CAVE_IN.get(),
             SoundSource.BLOCKS,
             2.5f,
-            0.6f + RANDOM.nextFloat() * 0.3f
-        );
-
-        // Play a secondary rumble (ambient cave sound)
-        level.playSound(null, pos,
-            SoundEvents.STONE_BREAK,
-            SoundSource.BLOCKS,
-            1.8f,
-            0.4f + RANDOM.nextFloat() * 0.2f
+            0.9f + RANDOM.nextFloat() * 0.2f
         );
     }
 
@@ -64,10 +57,10 @@ public class EffectsHelper {
      */
     public static void playCreakWarning(ServerLevel level, BlockPos pos) {
         level.playSound(null, pos,
-            SoundEvents.GRAVEL_STEP,
+            ModSounds.CAVE_WARNING.get(),
             SoundSource.BLOCKS,
-            0.8f,
-            0.5f + RANDOM.nextFloat() * 0.2f
+            0.9f,
+            0.95f + RANDOM.nextFloat() * 0.15f
         );
     }
 }

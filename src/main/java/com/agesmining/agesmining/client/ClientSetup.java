@@ -15,7 +15,6 @@ public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         AgesMining.LOGGER.info("Ages Mining client setup complete.");
-        // Screen shake and highlight renderers are registered via @Mod.EventBusSubscriber
-        // on the FORGE bus automatically — nothing extra needed here.
+        // Screen shake renderer is registered via @Mod.EventBusSubscriber on the FORGE bus.
     }
 }

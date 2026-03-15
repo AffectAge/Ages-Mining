@@ -1,12 +1,16 @@
 package com.agesmining.agesmining.util;
 
 import com.agesmining.agesmining.AgesMining;
+import com.agesmining.agesmining.block.MineSupportBeamBlock;
+import com.agesmining.agesmining.registry.ModBlocks;
+import com.agesmining.agesmining.registry.ModTags;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +21,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
@@ -92,8 +97,9 @@ public class SupportDataManager extends SimpleJsonResourceReloadListener {
 
     public boolean isSupported(BlockGetter world, BlockPos pos) {
         for (BlockPos supportPos : getMaximumSupportedAreaAround(pos, pos)) {
-            SupportDefinition support = get(world.getBlockState(supportPos));
-            if (support != null && support.canSupport(supportPos, pos)) {
+            BlockState supportState = world.getBlockState(supportPos);
+            SupportDefinition support = get(supportState);
+            if (support != null && support.canSupport(world, supportState, supportPos, pos)) {
                 return true;
             }
         }
@@ -151,6 +157,65 @@ public class SupportDataManager extends SimpleJsonResourceReloadListener {
             if (support.matches(state)) {
                 return support;
             }
+        }
+        return null;
+    }
+
+    public static boolean isPillarStable(BlockGetter world, BlockPos anyPillarPos) {
+        if (!world.getBlockState(anyPillarPos).is(ModBlocks.MINE_SUPPORT_PILLAR.get())) return false;
+
+        BlockPos base = anyPillarPos;
+        while (world.getBlockState(base.below()).is(ModBlocks.MINE_SUPPORT_PILLAR.get())) {
+            base = base.below();
+        }
+        BlockState foundation = world.getBlockState(base.below());
+        return isStrongFoundation(foundation);
+    }
+
+    private static boolean isStrongFoundation(BlockState foundation) {
+        if (foundation.isAir()) return false;
+        if (foundation.is(ModTags.Blocks.NON_STRUCTURAL)) return false;
+        if (isWeakFoundation(foundation)) return false;
+        return true;
+    }
+
+    private static boolean isWeakFoundation(BlockState state) {
+        return state.is(Blocks.GRAVEL)
+            || state.is(Blocks.SAND)
+            || state.is(Blocks.RED_SAND)
+            || state.is(Blocks.SUSPICIOUS_SAND)
+            || state.is(Blocks.SUSPICIOUS_GRAVEL)
+            || state.is(Blocks.POWDER_SNOW);
+    }
+
+    private static boolean isAnchoredBeam(BlockGetter world, BlockPos beamPos, BlockState beamState, int maxHorizontal) {
+        if (!beamState.is(ModBlocks.MINE_SUPPORT_BEAM.get())) return false;
+
+        var axis = beamState.getValue(MineSupportBeamBlock.AXIS);
+        Direction negative = axis == Direction.Axis.X ? Direction.WEST : Direction.NORTH;
+        Direction positive = axis == Direction.Axis.X ? Direction.EAST : Direction.SOUTH;
+
+        BlockPos negAnchor = findPillarAnchor(world, beamPos, negative, axis, maxHorizontal + 1);
+        BlockPos posAnchor = findPillarAnchor(world, beamPos, positive, axis, maxHorizontal + 1);
+        if (negAnchor == null || posAnchor == null) return false;
+
+        return isPillarStable(world, negAnchor) && isPillarStable(world, posAnchor);
+    }
+
+    private static BlockPos findPillarAnchor(BlockGetter world, BlockPos start, Direction dir, Direction.Axis beamAxis, int maxSteps) {
+        for (int i = 1; i <= maxSteps; i++) {
+            BlockPos at = start.relative(dir, i);
+            BlockState state = world.getBlockState(at);
+            if (state.is(ModBlocks.MINE_SUPPORT_BEAM.get())) {
+                if (state.getValue(MineSupportBeamBlock.AXIS) != beamAxis) {
+                    return null;
+                }
+                continue;
+            }
+            if (state.is(ModBlocks.MINE_SUPPORT_PILLAR.get())) {
+                return at.immutable();
+            }
+            return null;
         }
         return null;
     }
@@ -218,7 +283,10 @@ public class SupportDataManager extends SimpleJsonResourceReloadListener {
             return false;
         }
 
-        public boolean canSupport(BlockPos supportPos, BlockPos testPos) {
+        public boolean canSupport(BlockGetter world, BlockState supportState, BlockPos supportPos, BlockPos testPos) {
+            if (supportState.is(ModBlocks.MINE_SUPPORT_BEAM.get()) && !isAnchoredBeam(world, supportPos, supportState, supportHorizontal)) {
+                return false;
+            }
             BlockPos diff = supportPos.subtract(testPos);
             return Math.abs(diff.getX()) <= supportHorizontal &&
                 -supportDown <= diff.getY() && diff.getY() <= supportUp &&

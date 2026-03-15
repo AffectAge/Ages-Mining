@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -24,6 +25,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class MineSupportBeamBlock extends Block {
 
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
+    public static final BooleanProperty CONNECTED_NEGATIVE = BooleanProperty.create("connected_negative");
+    public static final BooleanProperty CONNECTED_POSITIVE = BooleanProperty.create("connected_positive");
 
     // Beam shapes: a flat plank along each horizontal axis
     // 16x4x4 along X, 4x4x16 along Z, placed near top of block
@@ -39,12 +42,14 @@ public class MineSupportBeamBlock extends Block {
             .requiresCorrectToolForDrops()
         );
         this.registerDefaultState(this.stateDefinition.any()
-            .setValue(AXIS, Direction.Axis.X));
+            .setValue(AXIS, Direction.Axis.X)
+            .setValue(CONNECTED_NEGATIVE, false)
+            .setValue(CONNECTED_POSITIVE, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(AXIS);
+        builder.add(AXIS, CONNECTED_NEGATIVE, CONNECTED_POSITIVE);
     }
 
     @Override
@@ -54,7 +59,35 @@ public class MineSupportBeamBlock extends Block {
         Direction.Axis axis = facing.getAxis();
         // Default to X if not horizontal (shouldn't happen)
         if (axis == Direction.Axis.Y) axis = Direction.Axis.X;
-        return this.defaultBlockState().setValue(AXIS, axis);
+        BlockState base = this.defaultBlockState().setValue(AXIS, axis);
+        return updateConnections(base, ctx.getLevel(), ctx.getClickedPos());
+    }
+
+    @Override
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState,
+                                   net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos facingPos) {
+        if (!facing.getAxis().isHorizontal()) {
+            return state;
+        }
+        return updateConnections(state, level, pos);
+    }
+
+    private BlockState updateConnections(BlockState state, net.minecraft.world.level.LevelAccessor level, BlockPos pos) {
+        Direction.Axis axis = state.getValue(AXIS);
+        Direction negative = axis == Direction.Axis.X ? Direction.WEST : Direction.NORTH;
+        Direction positive = axis == Direction.Axis.X ? Direction.EAST : Direction.SOUTH;
+
+        boolean negConnected = connectsTo(level.getBlockState(pos.relative(negative)), axis);
+        boolean posConnected = connectsTo(level.getBlockState(pos.relative(positive)), axis);
+
+        return state
+            .setValue(CONNECTED_NEGATIVE, negConnected)
+            .setValue(CONNECTED_POSITIVE, posConnected);
+    }
+
+    private boolean connectsTo(BlockState state, Direction.Axis axis) {
+        if (state.getBlock() instanceof MineSupportPillarBlock) return true;
+        return state.is(this) && state.getValue(AXIS) == axis;
     }
 
     @Override
