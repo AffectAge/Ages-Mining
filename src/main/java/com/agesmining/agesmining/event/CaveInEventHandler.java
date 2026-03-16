@@ -39,10 +39,10 @@ public class CaveInEventHandler {
         BlockState state = event.getState();
 
         StabilityEngine engine = StabilityEngine.get(level);
-        engine.tryTriggerCollapse(level, pos);
-
         if (state.is(ModBlocks.MINE_SUPPORT_PILLAR.get()) || state.is(ModBlocks.MINE_SUPPORT_BEAM.get())) {
             engine.tryTriggerSupportBreakCollapse(level, pos);
+        } else {
+            engine.tryTriggerCollapse(level, pos);
         }
 
         AgesMining.LOGGER.debug("Block broken at {} ({}), attempting collapse trigger",

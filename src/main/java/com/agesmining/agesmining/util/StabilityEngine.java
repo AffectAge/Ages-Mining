@@ -150,6 +150,15 @@ public class StabilityEngine {
         if (!AgesMiningConfig.INSTANCE.CAVE_INS_ENABLED.get()) return false;
         if (pos.getY() > AgesMiningConfig.INSTANCE.MIN_DEPTH_FOR_COLLAPSE.get()) return false;
 
+        if (!hasUnsupportedOverheadAfterSupportBreak(level, pos)) {
+            return false;
+        }
+
+        boolean supportClusterCollapsed = collapseConnectedSupportCluster(level, pos);
+        if (supportClusterCollapsed) {
+            triggerCollapseEffects(level, pos, 2.8f);
+        }
+
         int radius = 4 + level.getRandom().nextInt(5); // 4..8
         double chancePerCandidate = AgesMiningConfig.INSTANCE.SUPPORT_BREAK_COLLAPSE_CHANCE.get();
 
@@ -168,7 +177,7 @@ public class StabilityEngine {
                 return true;
             }
         }
-        return false;
+        return supportClusterCollapsed;
     }
 
     public boolean startCollapse(ServerLevel level, BlockPos centerPos) {
@@ -295,6 +304,61 @@ public class StabilityEngine {
         }
     }
 
+    private boolean hasUnsupportedOverheadAfterSupportBreak(ServerLevel level, BlockPos brokenSupportPos) {
+        int scanRadius = Math.max(1, Math.min(8, AgesMiningConfig.INSTANCE.CHECK_RADIUS.get()));
+        Set<BlockPos> unsupported = SupportDataManager.INSTANCE.findUnsupportedPositions(
+            level,
+            brokenSupportPos.offset(-scanRadius, 1, -scanRadius),
+            brokenSupportPos.offset(scanRadius, 8, scanRadius)
+        );
+
+        for (BlockPos pos : unsupported) {
+            BlockState state = level.getBlockState(pos);
+            if (state.isAir()) continue;
+            if (state.is(ModTags.Blocks.CAN_COLLAPSE) || state.is(ModTags.Blocks.CAN_START_COLLAPSE)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean collapseConnectedSupportCluster(ServerLevel level, BlockPos aroundBrokenSupport) {
+        ArrayDeque<BlockPos> queue = new ArrayDeque<>();
+        Set<BlockPos> visited = new HashSet<>();
+
+        for (Direction direction : Direction.values()) {
+            BlockPos start = aroundBrokenSupport.relative(direction);
+            if (isSupportBlock(level.getBlockState(start)) && visited.add(start.immutable())) {
+                queue.add(start.immutable());
+            }
+        }
+
+        boolean collapsedAny = false;
+        while (!queue.isEmpty()) {
+            BlockPos current = queue.removeFirst();
+            BlockState state = level.getBlockState(current);
+            if (!isSupportBlock(state)) {
+                continue;
+            }
+
+            if (collapseBlock(level, current, state, false)) {
+                collapsedAny = true;
+            }
+
+            for (Direction direction : Direction.values()) {
+                BlockPos next = current.relative(direction);
+                if (visited.add(next.immutable()) && isSupportBlock(level.getBlockState(next))) {
+                    queue.addLast(next.immutable());
+                }
+            }
+        }
+        return collapsedAny;
+    }
+
+    private boolean isSupportBlock(BlockState state) {
+        return state.is(ModBlocks.MINE_SUPPORT_PILLAR.get()) || state.is(ModBlocks.MINE_SUPPORT_BEAM.get());
+    }
+
     private boolean canStartCollapse(LevelAccessor level, BlockPos pos) {
         BlockPos posBelow = pos.below();
         BlockState state = level.getBlockState(pos);
@@ -312,6 +376,12 @@ public class StabilityEngine {
         BlockPos posBelow = pos.below();
         if (destroyBlockBelow && !canFallThrough(level, posBelow, level.getBlockState(posBelow), Direction.DOWN)) {
             level.destroyBlock(posBelow, true);
+        }
+
+        // Supports should shatter into item drops instead of becoming falling blocks.
+        if (isSupportBlock(state)) {
+            level.destroyBlock(pos, true);
+            return true;
         }
 
         FallingBlockHelper.startFalling(level, pos, state);
