@@ -146,6 +146,31 @@ public class StabilityEngine {
         return false;
     }
 
+    public boolean tryTriggerSupportBreakCollapse(ServerLevel level, BlockPos pos) {
+        if (!AgesMiningConfig.INSTANCE.CAVE_INS_ENABLED.get()) return false;
+        if (pos.getY() > AgesMiningConfig.INSTANCE.MIN_DEPTH_FOR_COLLAPSE.get()) return false;
+
+        int radius = 4 + level.getRandom().nextInt(5); // 4..8
+        double chancePerCandidate = AgesMiningConfig.INSTANCE.SUPPORT_BREAK_COLLAPSE_CHANCE.get();
+
+        Set<BlockPos> unsupported = SupportDataManager.INSTANCE.findUnsupportedPositions(
+            level,
+            pos.offset(-radius, -radius, -radius),
+            pos.offset(radius, radius, radius)
+        );
+
+        for (BlockPos candidate : unsupported) {
+            if (!canStartCollapse(level, candidate)) continue;
+            if (isSupported(level, candidate)) continue;
+            if (level.getRandom().nextDouble() >= chancePerCandidate) continue;
+
+            if (startCollapse(level, candidate)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean startCollapse(ServerLevel level, BlockPos centerPos) {
         int delayTicks = Math.max(0, AgesMiningConfig.INSTANCE.COLLAPSE_DELAY_TICKS.get());
         if (delayTicks == 0) {
@@ -304,8 +329,6 @@ public class StabilityEngine {
 
     private boolean isCollapsible(BlockState state) {
         if (state.isAir()) return false;
-        if (state.is(ModBlocks.MINE_SUPPORT_PILLAR.get())) return false;
-        if (state.is(ModBlocks.MINE_SUPPORT_BEAM.get())) return false;
         if (state.is(ModTags.Blocks.NON_COLLAPSIBLE)) return false;
         return true;
     }

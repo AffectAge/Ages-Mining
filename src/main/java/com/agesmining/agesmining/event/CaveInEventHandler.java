@@ -2,6 +2,7 @@ package com.agesmining.agesmining.event;
 
 import com.agesmining.agesmining.AgesMining;
 import com.agesmining.agesmining.config.AgesMiningConfig;
+import com.agesmining.agesmining.registry.ModBlocks;
 import com.agesmining.agesmining.util.StabilityEngine;
 import com.agesmining.agesmining.util.SupportDataManager;
 import net.minecraft.core.BlockPos;
@@ -37,7 +38,13 @@ public class CaveInEventHandler {
         BlockPos pos = event.getPos();
         BlockState state = event.getState();
 
-        StabilityEngine.get(level).tryTriggerCollapse(level, pos);
+        StabilityEngine engine = StabilityEngine.get(level);
+        engine.tryTriggerCollapse(level, pos);
+
+        if (state.is(ModBlocks.MINE_SUPPORT_PILLAR.get()) || state.is(ModBlocks.MINE_SUPPORT_BEAM.get())) {
+            engine.tryTriggerSupportBreakCollapse(level, pos);
+        }
+
         AgesMining.LOGGER.debug("Block broken at {} ({}), attempting collapse trigger",
             pos, state.getBlock().getDescriptionId());
     }

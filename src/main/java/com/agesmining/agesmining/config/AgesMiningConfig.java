@@ -14,6 +14,7 @@ public class AgesMiningConfig {
     public final ForgeConfigSpec.IntValue SUPPORT_BEAM_RANGE;
     public final ForgeConfigSpec.DoubleValue BASE_COLLAPSE_CHANCE;
     public final ForgeConfigSpec.DoubleValue COLLAPSE_TRIGGER_CHANCE;
+    public final ForgeConfigSpec.DoubleValue SUPPORT_BREAK_COLLAPSE_CHANCE;
     public final ForgeConfigSpec.DoubleValue COLLAPSE_FAKE_TRIGGER_CHANCE;
     public final ForgeConfigSpec.DoubleValue COLLAPSE_PROPAGATE_CHANCE;
     public final ForgeConfigSpec.DoubleValue COLLAPSE_EXPLOSION_PROPAGATE_CHANCE;
@@ -68,6 +69,10 @@ public class AgesMiningConfig {
         COLLAPSE_TRIGGER_CHANCE = builder
             .comment("Chance for a real collapse to be triggered by mining")
             .defineInRange("collapseTriggerChance", 0.10, 0.0, 1.0);
+
+        SUPPORT_BREAK_COLLAPSE_CHANCE = builder
+            .comment("Chance per unsupported candidate to trigger collapse when a support beam/pillar is broken")
+            .defineInRange("supportBreakCollapseChance", 0.22, 0.0, 1.0);
 
         COLLAPSE_FAKE_TRIGGER_CHANCE = builder
             .comment("Chance for a fake collapse warning (sound/particles only) when mining")

@@ -4,6 +4,8 @@
     "#agesmining:can_trigger_collapse",
     "minecraft:deepslate",
     "minecraft:cobbled_deepslate",
-    "minecraft:tuff"
+    "minecraft:tuff",
+    "agesmining:mine_support_pillar",
+    "agesmining:mine_support_beam"
   ]
 }
