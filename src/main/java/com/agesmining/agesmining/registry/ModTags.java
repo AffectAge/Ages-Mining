@@ -31,7 +31,7 @@ public class ModTags {
         public static final TagKey<Block> CAN_COLLAPSE = tag("can_collapse");
 
         private static TagKey<Block> tag(String name) {
-            return TagKey.create(Registries.BLOCK, new ResourceLocation(AgesMining.MOD_ID, name));
+            return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(AgesMining.MOD_ID, name));
         }
     }
 }

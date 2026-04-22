@@ -20,7 +20,7 @@ import snownee.jade.api.config.IPluginConfig;
 public enum AgesMiningJadeSupportProvider implements IBlockComponentProvider {
     INSTANCE;
 
-    private static final ResourceLocation UID = new ResourceLocation(AgesMining.MOD_ID, "support_info");
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(AgesMining.MOD_ID, "support_info");
 
     @Override
     public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {

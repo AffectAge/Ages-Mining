@@ -9,13 +9,13 @@ import com.agesmining.agesmining.registry.ModBlocks;
 import com.agesmining.agesmining.registry.ModCreativeTabs;
 import com.agesmining.agesmining.registry.ModItems;
 import com.agesmining.agesmining.registry.ModSounds;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,8 +38,8 @@ public class AgesMining {
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, AgesMiningConfig.SPEC, "agesmining-common.toml");
 
-        MinecraftForge.EVENT_BUS.register(new CaveInEventHandler());
-        MinecraftForge.EVENT_BUS.register(new PlayerMiningHandler());
+        NeoForge.EVENT_BUS.register(new CaveInEventHandler());
+        NeoForge.EVENT_BUS.register(new PlayerMiningHandler());
         // AgesMiningCommand auto-registered via @Mod.EventBusSubscriber
     }
 

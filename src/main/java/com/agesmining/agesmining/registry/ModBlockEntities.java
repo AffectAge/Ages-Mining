@@ -2,8 +2,8 @@ package com.agesmining.agesmining.registry;
 
 import com.agesmining.agesmining.AgesMining;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 /**
  * Block entity registry — currently empty, reserved for future features

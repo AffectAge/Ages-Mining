@@ -1,56 +1,56 @@
 package com.agesmining.agesmining.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class AgesMiningConfig {
 
-    public static final ForgeConfigSpec SPEC;
+    public static final ModConfigSpec SPEC;
     public static final AgesMiningConfig INSTANCE;
 
     // Cave-in general settings
-    public final ForgeConfigSpec.BooleanValue CAVE_INS_ENABLED;
-    public final ForgeConfigSpec.IntValue CHECK_RADIUS;
-    public final ForgeConfigSpec.IntValue SUPPORT_PILLAR_RANGE;
-    public final ForgeConfigSpec.IntValue SUPPORT_BEAM_RANGE;
-    public final ForgeConfigSpec.DoubleValue BASE_COLLAPSE_CHANCE;
-    public final ForgeConfigSpec.DoubleValue COLLAPSE_TRIGGER_CHANCE;
-    public final ForgeConfigSpec.DoubleValue SUPPORT_BREAK_COLLAPSE_CHANCE;
-    public final ForgeConfigSpec.DoubleValue COLLAPSE_FAKE_TRIGGER_CHANCE;
-    public final ForgeConfigSpec.DoubleValue COLLAPSE_PROPAGATE_CHANCE;
-    public final ForgeConfigSpec.DoubleValue COLLAPSE_EXPLOSION_PROPAGATE_CHANCE;
-    public final ForgeConfigSpec.IntValue COLLAPSE_MIN_RADIUS;
-    public final ForgeConfigSpec.IntValue COLLAPSE_RADIUS_VARIANCE;
-    public final ForgeConfigSpec.IntValue MIN_DEPTH_FOR_COLLAPSE;
-    public final ForgeConfigSpec.IntValue COLLAPSE_PROPAGATION_RADIUS;
-    public final ForgeConfigSpec.IntValue MAX_BLOCKS_PER_COLLAPSE;
-    public final ForgeConfigSpec.IntValue COLLAPSE_DELAY_TICKS;
+    public final ModConfigSpec.BooleanValue CAVE_INS_ENABLED;
+    public final ModConfigSpec.IntValue CHECK_RADIUS;
+    public final ModConfigSpec.IntValue SUPPORT_PILLAR_RANGE;
+    public final ModConfigSpec.IntValue SUPPORT_BEAM_RANGE;
+    public final ModConfigSpec.DoubleValue BASE_COLLAPSE_CHANCE;
+    public final ModConfigSpec.DoubleValue COLLAPSE_TRIGGER_CHANCE;
+    public final ModConfigSpec.DoubleValue SUPPORT_BREAK_COLLAPSE_CHANCE;
+    public final ModConfigSpec.DoubleValue COLLAPSE_FAKE_TRIGGER_CHANCE;
+    public final ModConfigSpec.DoubleValue COLLAPSE_PROPAGATE_CHANCE;
+    public final ModConfigSpec.DoubleValue COLLAPSE_EXPLOSION_PROPAGATE_CHANCE;
+    public final ModConfigSpec.IntValue COLLAPSE_MIN_RADIUS;
+    public final ModConfigSpec.IntValue COLLAPSE_RADIUS_VARIANCE;
+    public final ModConfigSpec.IntValue MIN_DEPTH_FOR_COLLAPSE;
+    public final ModConfigSpec.IntValue COLLAPSE_PROPAGATION_RADIUS;
+    public final ModConfigSpec.IntValue MAX_BLOCKS_PER_COLLAPSE;
+    public final ModConfigSpec.IntValue COLLAPSE_DELAY_TICKS;
 
     // Particle & sound settings
-    public final ForgeConfigSpec.BooleanValue ENABLE_WARNING_PARTICLES;
-    public final ForgeConfigSpec.BooleanValue ENABLE_SOUNDS;
-    public final ForgeConfigSpec.BooleanValue ENABLE_SCREEN_SHAKE;
+    public final ModConfigSpec.BooleanValue ENABLE_WARNING_PARTICLES;
+    public final ModConfigSpec.BooleanValue ENABLE_SOUNDS;
+    public final ModConfigSpec.BooleanValue ENABLE_SCREEN_SHAKE;
 
     // Damage settings
-    public final ForgeConfigSpec.BooleanValue DAMAGE_PLAYERS;
-    public final ForgeConfigSpec.DoubleValue COLLAPSE_DAMAGE_PER_BLOCK;
-    public final ForgeConfigSpec.BooleanValue DESTROY_ITEMS_ON_COLLAPSE;
+    public final ModConfigSpec.BooleanValue DAMAGE_PLAYERS;
+    public final ModConfigSpec.DoubleValue COLLAPSE_DAMAGE_PER_BLOCK;
+    public final ModConfigSpec.BooleanValue DESTROY_ITEMS_ON_COLLAPSE;
 
     // Block stability overrides
-    public final ForgeConfigSpec.IntValue STONE_STABILITY;
-    public final ForgeConfigSpec.IntValue DEEPSLATE_STABILITY;
-    public final ForgeConfigSpec.IntValue GRAVEL_STABILITY;
-    public final ForgeConfigSpec.IntValue SAND_STABILITY;
-    public final ForgeConfigSpec.IntValue DIRT_STABILITY;
-    public final ForgeConfigSpec.IntValue ORE_STABILITY;
+    public final ModConfigSpec.IntValue STONE_STABILITY;
+    public final ModConfigSpec.IntValue DEEPSLATE_STABILITY;
+    public final ModConfigSpec.IntValue GRAVEL_STABILITY;
+    public final ModConfigSpec.IntValue SAND_STABILITY;
+    public final ModConfigSpec.IntValue DIRT_STABILITY;
+    public final ModConfigSpec.IntValue ORE_STABILITY;
 
     static {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
         INSTANCE = new AgesMiningConfig(builder);
         SPEC = builder.build();
     }
 
-    private AgesMiningConfig(ForgeConfigSpec.Builder builder) {
+    private AgesMiningConfig(ModConfigSpec.Builder builder) {
 
         builder.comment("Ages Mining - Cave-In Configuration").push("cave_ins");
 
