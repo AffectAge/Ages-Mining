@@ -75,7 +75,7 @@ public class SupportDataManager extends SimpleJsonResourceReloadListener {
             Set<Block> fallbackBlocks = new HashSet<>();
             fallbackBlocks.add(com.agesmining.agesmining.registry.ModBlocks.MINE_SUPPORT_BEAM.get());
             loaded.add(new SupportDefinition(
-                new ResourceLocation(AgesMining.MOD_ID, "fallback_horizontal_support_beam"),
+                ResourceLocation.fromNamespaceAndPath(AgesMining.MOD_ID, "fallback_horizontal_support_beam"),
                 fallbackBlocks,
                 Set.of(),
                 2, 2, 4
@@ -251,12 +251,12 @@ public class SupportDataManager extends SimpleJsonResourceReloadListener {
 
     private void parseIngredientValue(String raw, Set<Block> blocks, Set<TagKey<Block>> tags) {
         if (raw.startsWith("#")) {
-            ResourceLocation tagId = new ResourceLocation(raw.substring(1));
+            ResourceLocation tagId = ResourceLocation.parse(raw.substring(1));
             tags.add(TagKey.create(Registries.BLOCK, tagId));
             return;
         }
 
-        ResourceLocation blockId = new ResourceLocation(raw);
+        ResourceLocation blockId = ResourceLocation.parse(raw);
         Block block = BuiltInRegistries.BLOCK.get(blockId);
         if (block == null || block == net.minecraft.world.level.block.Blocks.AIR) {
             AgesMining.LOGGER.warn("Unknown support ingredient block id '{}'", raw);

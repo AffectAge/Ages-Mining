@@ -4,9 +4,9 @@ import com.agesmining.agesmining.AgesMining;
 import com.agesmining.agesmining.block.MineSupportBeamBlock;
 import com.agesmining.agesmining.block.MineSupportPillarBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.RegistryObject;
 
 public class ModBlocks {
 

@@ -5,10 +5,10 @@ import com.agesmining.agesmining.registry.ModBlocks;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class ModBlockStateProvider extends BlockStateProvider {
 
@@ -24,7 +24,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     private void registerPillar() {
         ModelFile model = models().getExistingFile(
-            new ResourceLocation(AgesMining.MOD_ID, "block/mine_support_pillar"));
+            ResourceLocation.fromNamespaceAndPath(AgesMining.MOD_ID, "block/mine_support_pillar"));
 
         getVariantBuilder(ModBlocks.MINE_SUPPORT_PILLAR.get())
             .forAllStates(state -> {
@@ -45,7 +45,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     private void registerBeam() {
         ModelFile model = models().getExistingFile(
-            new ResourceLocation(AgesMining.MOD_ID, "block/mine_support_beam"));
+            ResourceLocation.fromNamespaceAndPath(AgesMining.MOD_ID, "block/mine_support_beam"));
 
         getVariantBuilder(ModBlocks.MINE_SUPPORT_BEAM.get())
             .forAllStates(state -> {

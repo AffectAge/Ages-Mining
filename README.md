@@ -1,4 +1,4 @@
-# Ages Mining — Cave-In Mod for Forge 1.20.1
+# Ages Mining — Cave-In Mod for NeoForge 1.21.1
 
 Реалистичные обвалы шахт, вдохновлённые TerraFirmaCraft. Копай осторожно!
 
@@ -139,8 +139,8 @@ P = Столб, B = Балка
 
 ## Установка
 
-1. Установи **Forge 1.20.1-47.2.0+**
-2. Положи `agesmining-1.0.0.jar` в папку `mods/`
+1. Установи **NeoForge 21.1.0+ (Minecraft 1.21.1)**
+2. Положи `agesmining-1.1.0.jar` в папку `mods/`
 3. Запусти игру — конфиг появится в `config/agesmining-common.toml`
 
 ---

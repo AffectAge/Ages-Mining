@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[47,)"
+loaderVersion="[1,)"
 license="MIT"
 issueTrackerURL="https://github.com/agesmining/ages-mining/issues"
 
 [[mods]]
     modId="agesmining"
-    version="1.0.0"
+    version="1.1.0"
     displayName="Ages Mining"
     description='''
 Ages Mining adds realistic cave-in mechanics inspired by TerraFirmaCraft.
@@ -14,22 +14,22 @@ Use mine supports to prevent cave-ins!
 '''
 
 [[dependencies.agesmining]]
-    modId="forge"
+    modId="neoforge"
     mandatory=true
-    versionRange="[47.2.0,)"
+    versionRange="[21.1.0,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.agesmining]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.20.1,1.21)"
+    versionRange="[1.21.1,1.22)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.agesmining]]
     modId="jade"
     mandatory=false
-    versionRange="[11,)"
+    versionRange="[16,)"
     ordering="AFTER"
     side="CLIENT"

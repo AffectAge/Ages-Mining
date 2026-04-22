@@ -3,9 +3,9 @@ package com.agesmining.agesmining.registry;
 import com.agesmining.agesmining.AgesMining;
 import com.agesmining.agesmining.item.SupportBlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.RegistryObject;
 
 public class ModItems {
 
